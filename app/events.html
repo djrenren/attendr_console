@@ -166,6 +166,7 @@
             AttendrApi.loadView($('#schedule-container'), 'schedule-template', data);
 
             AttendrApi.getPosts(AttendrApi.getUrlParam('eventid'), function(data) {
+                console.log(data);
                 AttendrApi.loadView($('#posts-container'), 'posts-template', {
                     user : AttendrApi.get('user'),
                     posts : data
@@ -204,11 +205,32 @@
         <div class="span12">
                 <img src="{{user.image}}" alt="{{user.first}}" title="{{user.first}}" />
                 <textarea id="user-post-textarea"></textarea>
-                <button class="btn btn-primary btn-large">Post</button>
+                <button class="btn btn-primary btn-large" onclick="AttendrApi.makePost();">Post</button>
             </div>
         </div>
     </div>
     <h4>What other people are saying about this event:</h4>
+    <div id="posts-list">
+    {{#each posts}}
+    <div class="row-fluid">
+        <div class="span12 well">
+                <img class="pull-left" style="margin-right: 10px;" src="{{user.image}}" alt="{{user.name.first}}" title="{{user.name.first}}" width="50" height="50" />
+                <div class="pull-left"><strong>{{user.name.first}}</strong> {{content}}</div>
+            </div>
+        </div>
+    </div>
+    {{/each}}
+    </div>
+    </script>
+
+    <script id="post-list-template" type="text/x-handlebars-template">
+    <div class="row-fluid">
+        <div class="span12 well">
+                <img class="pull-left" style="margin-right: 10px;" src="{{user.image}}" alt="{{user.name.first}}" title="{{user.name.first}}" width="50" height="50" />
+                <div class="pull-left"><strong>{{user.name.first}}</strong> {{content}}</div>
+            </div>
+        </div>
+    </div>
     </script>
 
     <script id="select-template" type="text/x-handlebars-template">

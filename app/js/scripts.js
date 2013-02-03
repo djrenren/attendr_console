@@ -39,9 +39,31 @@ AttendrApi = {
     getPosts : function(eventid, callback) {
         this.request('post/get', 'POST', {
             'user' : AttendrApi.get('user')._id,
-            'event' : eventid
+            'event_id' : eventid
         }, function(msg) {
             callback(msg);
+        });
+    },
+
+    makePost : function() {
+        var event_id = this.getUrlParam('eventid');
+        var user = this.get('user');
+        var content = $('#user-post-textarea').val();
+
+        var source   = $('#post-list-template').html();
+        var template = Handlebars.compile(source);
+        $('#posts-list').prepend(template({
+            user : user,
+            content : content
+        }));
+
+        $('#user-post-textarea').val('');
+
+        this.request('post/create', 'POST', {
+            type : 'text',
+            content : content,
+            event_id : event_id,
+            user : user._id
         });
     },
 
