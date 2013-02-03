@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Attendr Console</title>
+        
+        <link href="css/styles.css" media="all" type="text/css" rel="stylesheet">
+        <link href="css/bootstrap.css" media="all" type="text/css" rel="stylesheet">
+        <link href="css/bootstrap-responsive.css" media="all" type="text/css" rel="stylesheet">
+        <link href="css/custom-theme/jquery-ui-1.10.0.custom.css" media="all" type="text/css" rel="stylesheet">
+
+        <script src="js/jquery.js"></script>
+        <script src="js/jquery.ui.js"></script>
+        <script src="js/jquery.cookie.js"></script>
+        <script src="js/jquery.geturlparam.js"></script>
+        <script src="js/handlebars.js"></script>
+        <script src="js/scripts.js"></script>
+        <script src="js/bootstrap.min.js"></script>
+
+        <style>
+        body {
+            padding-top: 60px;
+        }
+        </style>
+
+        <link rel="shortcut icon" href="/favicon.ico" />
+
+        <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
+        <!--[if lt IE 9]>
+        <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+        <![endif]-->
+    </head>
+ 
+    <body>
+        <div class="navbar navbar-inverse navbar-fixed-top">
+            <div class="navbar-inner">
+                <div class="container-fluid">
+                    <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </a>
+                    <a class="brand" href="/">Attendr</a>
+                    <div class="nav-collapse collapse">
+                        
+                    </div><!--/.nav-collapse -->
+                </div>
+            </div>
+        </div>
+
+        <div class="container-fluid">
+        <div class="row-fluid">
+            <div class="span9">
+                <h1>Events happening now:</h1>
+                <div class="row-fluid" id="events-container">
+                    
+                </div><!--/row-->
+            </div><!--/span-->
+            <div class="span3">
+                <div class="well sidebar-nav">
+                <ul class="nav nav-list">
+                        <li class="nav-header">Navigation</li>
+                        <li><a href="#schedule-modal" data-toggle="modal">Schedule an Event</a></li>
+                    </ul>
+                </div><!--/.well -->
+            </div><!--/span-->
+
+        </div><!--/row-->
+        <footer>
+            <p>&copy; <span class="brand">Attendr</span></p>
+        </footer>
+        </div> <!-- /container -->
+        <div class="modal hide fade" id="schedule-modal">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h3>Schedule an Event</h3>
+                <div class="modal-body">
+                    <form class="form-horizontal">
+                        <div class="control-group">
+                            <label class="control-label" for="name">Name</label>
+                            <div class="controls">
+                                <input type="text" name="name" id="name" placeholder="Event name" />
+                            </div>
+                        </div>
+
+                        <div class="control-group">
+                            <label class="control-label" for="start">Start Date</label>
+                            <div class="controls">
+                                <input type="text" value="" name="start" id="start" class="input-small" />
+                                <select class="input-mini" name="start_time_h" id="start_time_h">
+                                </select>
+                                <select class="input-mini" name="start_time_m" id="start_time_m">
+                                </select>
+                                <select class="input-mini" name="start_time_a" id="start_time_a">
+                                    <option value="AM">AM</option>
+                                    <option value="PM">PM</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="control-group">
+                            <label class="control-label" for="end">End Date</label>
+                            <div class="controls">
+                                <input type="text" value="" name="end" id="end" class="input-small" />
+                                <select class="input-mini" name="end_time_h" id="end_time_h">
+                                </select>
+                                <select class="input-mini" name="end_time_m" id="end_time_m">
+                                </select>
+                                <select class="input-mini" name="end_time_a" id="end_time_a">
+                                    <option value="AM">AM</option>
+                                    <option value="PM">PM</option>
+                                </select>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <a href="#" class="btn" data-dismiss="modal">Close</a>
+                    <a href="#" class="btn btn-primary">Schedule</a>
+                </div>
+            </div>
+        </div>
+
+        <script>
+        $(document).ready(function() {
+            AttendrApi.getEvents(function(data) {
+                AttendrApi.loadView($('#events-container'), 'events-template', {
+                    user : AttendrApi.get('user'),
+                    events : data
+                });
+            });
+        });
+        </script>
+
+        <script id="events-template" type="text/x-handlebars-template">
+        <ul class="thumbnails">
+            {{#each events}}
+            <li class="span3">
+                <div class="thumbnail">
+                    <a href="events.html?eventid={{_id}}">
+                        <img data-src="{{image}}" src="{{image}}" alt="{{name}}" title="{{name}}" />
+                    </a>
+                    <div class="caption">
+                        <h4><a href="events.html?eventid={{_id}}">{{name}}</a></h4>
+                        <p>{{description}}</p>
+                        <a href="events.html?eventid={{_id}}" class="btn btn-primary">Visit</a>
+                    </div>
+                </div>
+            </li>
+            {{/each}}
+        </ul>
+        </script>
+
+        <script id="select-template" type="text/x-handlebars-template">
+        {{#each options}}
+        <option value="{{value}}">{{name}}</option>
+        {{/each}}
+        </script>
+    </body>
+</html>
